@@ -1,7 +1,8 @@
-class PenaltyPlay:
+from plays.play import Play
+
+class PenaltyPlay(Play):
     def __init__(self, play, game_info):
-        self.period = play.get('period')
-        self.time_in_period = play.get('timeInPeriod')
+        super().__init__(play, game_info)
         self.penalized_team = game_info.get_team(play['details'].get('eventOwnerTeamId')).get('abbrev', 'Unknown Team')
         self.penalized_player = game_info.get_player_name(play['details'].get('committedByPlayerId'))
         self.penalty_type = play['details'].get('descKey')
@@ -12,7 +13,7 @@ class PenaltyPlay:
         if (self.drawnByPlayerId != None):
             self.drawing_player = game_info.get_player_name(play['details'].get('drawnByPlayerId'))
 
-    def format_summary(self):
+    def __str__(self):
         if (hasattr(self, 'drawing_player')):
             return (
                 f"Penalty - Period: {self.period}, Time: {self.time_in_period}, "
@@ -25,10 +26,10 @@ class PenaltyPlay:
             f"Penalized Team: {self.penalized_team}, Penalized Player: {self.penalized_player}, "
             f"Penalty Type: {self.penalty_type}, Penalty Duration: {self.penalty_duration} minutes"
         )
-        
-    def getPlayerId(self):
-        return self.playerid
 
+    def __repr__(self):
+        return (f"PenaltyPlay({super().__repr__()}, penalized_player='{self.penalized_player}', penalty_type='{self.penalty_type})")
+    
     def get_involved_player_ids(self):
         player_ids = [self.committedByPlayerId]
         if self.drawnByPlayerId:

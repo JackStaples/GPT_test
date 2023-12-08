@@ -1,7 +1,8 @@
-class GoalPlay:
+from plays.play import Play
+
+class GoalPlay(Play):
     def __init__(self, play, game_info):
-        self.period = play.get('period')
-        self.time_in_period = play.get('timeInPeriod')
+        super().__init__(play, game_info)
         self.scoring_team = game_info.get_team(play['details'].get('eventOwnerTeamId')).get('abbrev', 'Unknown Team')
         self.scoring_player = game_info.get_player_name(play['details'].get('scoringPlayerId'))
         self.goalie = game_info.get_player_name(play['details'].get('goalieInNetId'))
@@ -10,7 +11,6 @@ class GoalPlay:
         self.shot_type = play['details'].get('shotType')
         self.assist1_player = self.get_assist_player(play['details'].get('assist1PlayerId'), game_info)
         self.assist2_player = self.get_assist_player(play['details'].get('assist2PlayerId'), game_info)
-        
         self.playerid = play['details'].get('scoringPlayerId')
         self.assist1_playerid = play['details'].get('assist1PlayerId')
         self.assist2_playerid = play['details'].get('assist2PlayerId')
@@ -18,10 +18,7 @@ class GoalPlay:
     def get_assist_player(self, player_id, game_info):
         return game_info.get_player_name(player_id) if player_id else None
 
-    def getPlayerId(self):
-        return self.playerid
-
-    def format_summary(self):
+    def __str__(self):
         summary_str = (
             "Goal - "
             f"Period: {self.period}, Time: {self.time_in_period}, "
@@ -38,6 +35,9 @@ class GoalPlay:
         else:
             summary_str += ", Goalie: Empty Net"
         return summary_str
+    
+    def __repr__(self):
+        return (f"GoalPlay({super().__repr__()}, scoring_player='{self.scoring_player}', shot_type='{self.shot_type}, shot_type='{self.shot_type}')")
 
     def get_involved_player_ids(self):
         player_ids = [self.playerid]

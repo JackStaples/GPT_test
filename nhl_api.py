@@ -34,7 +34,7 @@ class NHLGameLiveFeed:
             logging.error(f"Other error occurred: {err}")
             return f"Error: {err}"
 
-def get_player_statistics(self, player_id):
+    def get_player_statistics(self, player_id):
         """
         Retrieves detailed player statistics from the NHL API.
 
@@ -53,6 +53,7 @@ def get_player_statistics(self, player_id):
             Exception: For any other exceptions that might occur.
         """
         url = f"https://api-web.nhle.com/v1/player/{player_id}/landing"
+        print(url)
         try:
             response = requests.get(url)
             response.raise_for_status()
